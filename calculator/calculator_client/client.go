@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/nicholasanthonys/gRPC-demo/calculator/calculatorpb"
 	"google.golang.org/grpc"
+	"io"
 	"log"
 )
 
@@ -22,7 +23,8 @@ func main() {
 	c := calculatorpb.NewCalculatorServiceClient(cc)
 	// fmt.Printf("created client : %v", c)
 
-	doUnary(c)
+	//doUnary(c)
+	doSterverStreaming(c)
 }
 
 func doUnary(c calculatorpb.CalculatorServiceClient) {
@@ -38,4 +40,27 @@ func doUnary(c calculatorpb.CalculatorServiceClient) {
 	}
 
 	log.Printf("response from calculator:  %v", res.SumResult)
+}
+
+func doSterverStreaming(c calculatorpb.CalculatorServiceClient) {
+	fmt.Println("Starting to do a PrimeDecomposition Server Streaming RPC...")
+	req := &calculatorpb.PrimeNumberDecompositionRequest{
+		Number: 12,
+	}
+
+	stream, err := c.PrimeNumberDecomposition(context.Background(), req)
+	if err != nil {
+		log.Fatalf("Error while calling PrimeDecomposition RPC : %v", err)
+	}
+	for {
+		res, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Something happened : %v", err)
+		}
+		fmt.Println(res.GetPrimeFactor())
+	}
+
 }
