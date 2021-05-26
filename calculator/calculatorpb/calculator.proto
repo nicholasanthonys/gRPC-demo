@@ -20,8 +20,20 @@ message PrimeNumberDecompositionResponse {
   int64 prime_factor = 1;
 }
 
+message SquareRootRequest {
+  int32 number = 1 ;
+}
+message SquareRootResponse {
+  double number_root = 1;
+}
+
 service CalculatorService{
   rpc Sum(SumRequest) returns(SumResponse) {}
   rpc PrimeNumberDecomposition (PrimeNumberDecompositionRequest)
       returns (stream  PrimeNumberDecompositionResponse) {}
+
+  // error handling
+  // this rpc will throw an exception if the sent number is negative
+  // the error being sent is of type INVALID_ARGUMENT
+  rpc SquareRoot(SquareRootRequest) returns (SquareRootResponse) {}
 }

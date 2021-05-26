@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"github.com/nicholasanthonys/gRPC-demo/calculator/calculatorpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"log"
+	"math"
 	"net"
 )
 
@@ -22,7 +25,20 @@ func (*server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculat
 		SumResult: firstNumber + secondNumber,
 	}, nil
 }
+func (*server) SquareRoot(ctx context.Context, req *calculatorpb.SquareRootRequest,
+) (*calculatorpb.SquareRootResponse, error) {
+	fmt.Println("Received square root rpc")
 
+	number := req.GetNumber()
+	if number < 0 {
+		return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("Received a negative number %v : ", number))
+	}
+
+	return &calculatorpb.SquareRootResponse{
+		NumberRoot: math.Sqrt(float64(number)),
+	}, nil
+
+}
 func (*server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest,
 	stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
 	fmt.Printf(" Received PrimeNumberDecomposition RPC : is \n %v", req)
