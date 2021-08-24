@@ -99,7 +99,7 @@ func (*server) LongGreet(stream greetpb.GreetService_LongGreetServer) error {
 func main() {
 	fmt.Println("Hello World")
 
-	lis, err := net.Listen("tcp", "0.0.0.0:50051")
+	lis, err := net.Listen("tcp", "0.0.0.0:9090")
 	if err != nil {
 		log.Fatalf("Fai;led to listen : %v", err)
 	}

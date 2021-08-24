@@ -14,7 +14,7 @@ func main() {
 	fmt.Println("Hello I'm a client")
 
 	// by default, grpc has ssl. for now, we don't have ssl certificate. remove this in production
-	cc, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	cc, err := grpc.Dial("localhost:9090", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("could not connect %v", err)
 	}
@@ -24,10 +24,10 @@ func main() {
 	c := greetpb.NewGreetServiceClient(cc)
 	// fmt.Printf("created client : %v", c)
 
-	//doUnary(c)
+	doUnary(c)
 	//doServerStreaming(c)
 	//doClientStreaming(c)
-	doBiDiStreaming(c)
+	//doBiDiStreaming(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
